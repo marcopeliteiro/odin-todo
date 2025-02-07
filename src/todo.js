@@ -2,13 +2,15 @@ class Todo{
     
     static idCount = 0;
 
-    constructor(name){
+    constructor(name, date){
         this.id = ++Todo.idCount;
         this.name = name;
+        this.date = date;
     }
 
-    editTodoName(newName){
+    editTodo(newName, newDate){
         this.name = newName;
+        this.date = newDate;
     }
 
 }

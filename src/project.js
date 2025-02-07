@@ -1,5 +1,4 @@
 
-
 class Project{
 
 static projectsList = [];
