@@ -7,24 +7,46 @@
 </head>
 <body>
     
-    <div id="projectsSection">
-    
-    </div>
+    <button id="createProject">Create Project</button>
+
+    <div id="projectsSection"></div>
+
+    <dialog id="createProjectModal">
+        <form action="">
+            <label for="projectNameCreate">Project Name</label><br>
+            <input type="text" id="projectNameCreate" name="projectNameCreate"><br>
+         <div>
+            <button id="confirmCreateProject" value="default">Confirm</button>
+            <button value="cancel" formmethod="dialog">Cancel</button>
+        </div>            
+        </form>
+    </dialog>
+
+    <dialog id="createTodoModal">
+        <form action="">
+            <label for="todoNameCreate">Name</label><br>
+            <input type="text" id="todoNameCreate" name="todoNameCreate"><br>
+            <label for="todoDateCreate">Date</label><br>
+            <input type="date" id="todoDateCreate" name="todoDateCreate">
+         <div>
+            <button id="confirmCreateTodo" value="default">Confirm</button>
+            <button value="cancel" formmethod="dialog">Cancel</button>
+        </div>            
+        </form>
+    </dialog>
+
 
     <dialog id="editModal">
-
         <form action="">
             <label for="todoNameEdit">Name</label><br>
             <input type="text" id="todoNameEdit" name="todoNameEdit"><br>
             <label for="todoDateEdit">Date</label><br>
             <input type="date" id="todoDateEdit" name="todoDateEdit">
-        
-        <div>
+         <div>
             <button id="confirmEditTodo" value="default">Confirm</button>
             <button value="cancel" formmethod="dialog">Cancel</button>
         </div>            
         </form>
-
     </dialog>
 
 </body>
