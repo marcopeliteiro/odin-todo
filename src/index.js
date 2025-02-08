@@ -13,7 +13,7 @@ let date3 = format(new Date(2025,6,28), "yyyy-MM-dd");
 
 console.log(date1);
 
-let todo1 = new Todo("Compras", date1);
+let todo1 = new Todo("Compras", date1,true);
 let todo2 = new Todo("Lixo",date2);
 let todo3 = new Todo("Estudo",date3);
 

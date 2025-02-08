@@ -12,6 +12,7 @@ const projectsSection = document.querySelector("#projectsSection");
 const editModal = document.querySelector("#editModal");
 const editModalNameinput = document.querySelector("#todoNameEdit");
 const editModalDateInput = document.querySelector("#todoDateEdit");
+const todoCheckEdit = document.querySelector("#todoCheckEdit");
 const confirmEditTodoBtn = document.querySelector("#confirmEditTodo");
 
 //serve para guardar referencia ao todo que vai ser editado após clicar no editBtn e depois confirma se a edição no confirmBtn
@@ -47,24 +48,26 @@ function displayTodosinProjectDOM(project, todosTable, projectsSection){
 
     project.todosList.forEach(todo =>{
         const todoRowDOM = document.createElement("tr");
-        const todoIdDOM = document.createElement("td");
         const todoNameDom = document.createElement("td");
         const todoDateDOM = document.createElement("td");
+        const checkedTodoDOM = document.createElement("input");
         const deleteBtnDOM = document.createElement("button");
         const editBtnDOM = document.createElement("button");
 
-        todoIdDOM.textContent = todo.id;
         todoNameDom.textContent = todo.name;
         todoDateDOM.textContent = todo.date;
+        checkedTodoDOM.type = "checkbox";
+        checkedTodoDOM.checked = todo.checkTodo;
         deleteBtnDOM.textContent = "Delete";
         editBtnDOM.textContent = "Edit";
 
         deleteTodoFromProjectDOM(deleteBtnDOM, project,todo);
+        changeCheckValue(todo,checkedTodoDOM);
         editTodoDOM(todo,editBtnDOM);
 
-        todoRowDOM.appendChild(todoIdDOM);
         todoRowDOM.appendChild(todoNameDom);
         todoRowDOM.appendChild(todoDateDOM);
+        todoRowDOM.appendChild(checkedTodoDOM);
         todoRowDOM.appendChild(deleteBtnDOM);
         todoRowDOM.appendChild(editBtnDOM);
 
@@ -86,6 +89,7 @@ function editTodoDOM(todo,editBtn){
         currentEditingTodo = todo;
         editModalNameinput.value = currentEditingTodo.name;
         editModalDateInput.value = currentEditingTodo.date;
+        todoCheckEdit.checked = currentEditingTodo.checkTodo;
         editModal.showModal();
         
     });
@@ -100,13 +104,27 @@ createProjectButton.addEventListener("click", ()=>{
     createProjectModal.showModal();
 });
 
+//preciso desta função para depois aparecer o valor da checkbox no modal de editar
+function changeCheckValue(todo, checkedTodoDOM){ 
+    checkedTodoDOM.addEventListener("change",()=>{
+        currentEditingTodo = todo;
+        if(currentEditingTodo.checkTodo){
+            currentEditingTodo.checkTodo = false;
+        }
+        else{
+            currentEditingTodo.checkTodo = true;
+        }
+    });
+}
+
 //confirm Buttons
 
 confirmEditTodoBtn.addEventListener("click",(e)=>{
     e.preventDefault();
     const newName = editModalNameinput.value;
     const newDate = editModalDateInput.value;
-    currentEditingTodo.editTodo(newName, newDate);
+    const newTodoCheck = todoCheckEdit.checked;
+    currentEditingTodo.editTodo(newName, newDate, newTodoCheck);
     editModal.close();
     cleanDOMandRedisplay(projectsSection);
 });
