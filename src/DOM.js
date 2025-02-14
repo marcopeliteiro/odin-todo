@@ -1,4 +1,4 @@
-import { Project } from "./project";
+import { Project, createProjectAndSaveToLocalStorage, retrieveProjectsLocalStorage } from "./project";
 import { Todo } from "./todo";
 const createProjectButton = document.querySelector("#createProject");
 const createProjectModal = document.querySelector("#createProjectModal");
@@ -20,8 +20,8 @@ let currentProject = null;
 let currentEditingTodo = null; 
 
 function displayProjectsDOM(){
-
-    Project.projectsList.forEach(project => {
+    
+    retrieveProjectsLocalStorage().forEach(project => {
         const projectNameHeader = document.createElement("h1");
         const addTodoBtnDOM = document.createElement("button");
         projectNameHeader.textContent = project.name;
@@ -33,13 +33,13 @@ function displayProjectsDOM(){
 
         const todosTable = document.createElement("table");
         displayTodosinProjectDOM(project, todosTable, projectsSection);
-        
         });
 }
 
 function openCreateTodosModal(addTodoBtnDOM, project){
     addTodoBtnDOM.addEventListener("click", ()=>{
         currentProject = project;
+        console.log(currentProject);
         createTodoModal.showModal();
     });
 };
@@ -80,6 +80,7 @@ function displayTodosinProjectDOM(project, todosTable, projectsSection){
 function deleteTodoFromProjectDOM(deleteBtn, project, todo){
     deleteBtn.addEventListener("click",()=>{
         project.removeTodoFromProject(todo);
+        setProjectsListInLocalStorage();
         cleanDOMandRedisplay(projectsSection);
     });
 }
@@ -110,9 +111,11 @@ function changeCheckValue(todo, checkedTodoDOM){
         currentEditingTodo = todo;
         if(currentEditingTodo.checkTodo){
             currentEditingTodo.checkTodo = false;
+            setProjectsListInLocalStorage();
         }
         else{
             currentEditingTodo.checkTodo = true;
+            setProjectsListInLocalStorage();
         }
     });
 }
@@ -125,15 +128,18 @@ confirmEditTodoBtn.addEventListener("click",(e)=>{
     const newDate = editModalDateInput.value;
     const newTodoCheck = todoCheckEdit.checked;
     currentEditingTodo.editTodo(newName, newDate, newTodoCheck);
+    setProjectsListInLocalStorage();//falta adicionar a funcao editTodo para o array de todos nos projetos
     editModal.close();
     cleanDOMandRedisplay(projectsSection);
 });
 
 confirmCreateProject.addEventListener("click", (e)=>{
     e.preventDefault();
-    const newProjectName = projectNameCreate.value;
-    let newProject = new Project(newProjectName);
+    let newProjectName = projectNameCreate.value;
+    //let newProject = new Project(newProjectName);
+    createProjectAndSaveToLocalStorage(newProjectName);
     createProjectModal.close();
+    projectNameCreate.value = "";
     cleanDOMandRedisplay(projectsSection);
 });
 
@@ -143,6 +149,7 @@ confirmCreateTodo.addEventListener("click", (e)=>{
     const newDate = todoDateCreate.value;
     let newTodo = new Todo(newTodoName,newDate);
     currentProject.addTodoToProject(newTodo);
+    setProjectsListInLocalStorage();
     createTodoModal.close();
     //para limpar os inputs do modal
     todoNameCreate.value="";
@@ -150,5 +157,9 @@ confirmCreateTodo.addEventListener("click", (e)=>{
     cleanDOMandRedisplay(projectsSection);
 });
 
+//tenho de definir isto após qualquer ação para garantir que as mudanças efetuadas são refletidas na localStorage
+function setProjectsListInLocalStorage(){
+    localStorage.setItem("projects", JSON.stringify(Project.projectsList));
+}
 
 export {displayProjectsDOM};
